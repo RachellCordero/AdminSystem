@@ -108,7 +108,9 @@ Unit testing for the sign up page:
 
 Unit testing for the users page which consists of requesting roles and permissions using the users's unique ID and assigning a role to a user. 
 <p align="center">
-<img src="Images/api-users-uid-roles--GET.png"  width="450" height="300">  <img src="Images/api-users-uid-permissions--GET.png"  width="450" height="300">  <img src="Images/api-users-uid-roles--POST.png"  width="450" height="300">
+   <img src="Images/api-users-uid-roles--GET.png"  width="450" height="300"> 
+   <img src="Images/api-users-uid-permissions--GET.png"  width="450" height="300"> 
+   <img src="Images/api-users-uid-roles--POST.png"  width="450" height="300">
 </p>
 
 Unit testing for the roles page which includes reuesting for the list of available roles and creating new roles. 
