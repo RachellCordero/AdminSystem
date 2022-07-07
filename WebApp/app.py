@@ -121,10 +121,6 @@ def api_login():
         return redirect(url_for('accountList',UID=db_uid))
     return render_template('login.html', error=error)
 
-@app.route('/red/<name>')
-def red(name):
-    return 'welcome %s' % name
-
 #Accounts
 @app.route('/accounts')
 def getToDB():
@@ -226,6 +222,81 @@ def api_roles():
     
     return "roles"
 
+@app.route('/api/roles/<rolename>/permissions',methods = ['POST','GET'])
+def api_roles_rolename_permissions(rolename):
+    if request.method == 'GET':
+        cursor = conn.cursor()
+        cursor.execute("select rolename from tbl_roles where rolename='"+rolename+"' group by rolename")
+        roles = cursor.fetchall()
+        
+        mydict = create_dict()
+        for row in roles:
+            cursor2 = conn.cursor()
+            cursor2.execute("select Pname from tbl_permissions left join tbl_roles on tbl_permissions.pid=tbl_roles.[permissions] where rolename = '"+row[0].rstrip()+"'")
+            per = cursor2.fetchall()
+            mydict2 = create_dict()
+            permissionid=0
+            for row2 in per:
+                mydict2.add(permissionid,row2[0].rstrip())
+                permissionid = permissionid+1
+            mydict.add(row[0].rstrip(),mydict2)
+
+        return jsonify(mydict)
+    else:
+        input_json = request.get_json(force=True) 
+        role = input_json['role']
+        Permission = input_json['permission']
+        # UID=
+
+        for per in Permission:
+            cursor = conn.cursor()
+            cursor.execute("insert into tbl_roles (RoleName,[Permissions],UID)"
+                "values('"+role+"','"+per+"',NEWID())")
+        conn.commit()
+
+        return 'Successfull'
+
+@app.route('/api/users/<id>/roles',methods = ['POST','GET'])
+def api_users_id_roles(id):
+    if request.method == 'GET':
+        cursor = conn.cursor()
+        cursor.execute("select * from tbl_account where UID='"+id+"'")
+        roles = cursor.fetchall()
+        
+        mydict = create_dict()
+        for col in roles:
+            mydict.add(col[0],{"username":col[1].rstrip(),"password":col[2].rstrip(),"firstname":col[3].rstrip(),"lastname":col[4].rstrip(),"role":col[5].rstrip(),"UID":col[13].rstrip()})
+
+        return jsonify(mydict)
+    else:
+        input_json = request.get_json(force=True) 
+        role = input_json['role']
+
+        cursor = conn.cursor()
+        cursor.execute("update tbl_account set Role = '"+role+"'")
+        conn.commit()
+
+        return 'Successfull'
+
+@app.route('/api/users/<id>/permissions',methods = ['GET'])
+def api_users_id_permissions(id):
+    cursor = conn.cursor()
+    cursor.execute("select Role from tbl_account where UID='"+id+"'")
+    roles = cursor.fetchall()
+    
+    mydict = create_dict()
+    for row in roles:
+        cursor2 = conn.cursor()
+        cursor2.execute("select Pname from tbl_roles left join tbl_permissions on tbl_permissions.pid=tbl_roles.[permissions] where rolename = '"+row[0].rstrip()+"'")
+        per = cursor2.fetchall()
+        mydict2 = create_dict()
+        permissionid=0
+        for row2 in per:
+            mydict2.add(permissionid,row2[0].rstrip())
+            permissionid = permissionid+1
+        mydict.add(row[0].rstrip(),mydict2)
+
+    return jsonify(mydict)
 
 @app.route('/api/roles/delete',methods = ['POST'])
 def api_roles_delete():
