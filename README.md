@@ -1,29 +1,3 @@
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-  </ol>
-</details>
-
 # System Application 
 ##### Created By Rachell Cordero
 
@@ -126,32 +100,28 @@ Installation is successful when this message is shown:
 </p>
 
 
-## Built With
+## Unit testing of API services
+Unit testing for the sign up page: 
+<p align="center">
+<img src="Images/api-signup.png"  width="450" height="300">
+</p>
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+Unit testing for the users page which consists of requesting roles and permissions using the users's unique ID and assigning a role to a user. 
+<p align="center">
+<img src="Images/api-users-uid-roles--GET.png"  width="450" height="300">  <img src="Images/api-users-uid-permissions--GET.png"  width="450" height="300">  <img src="Images/api-users-uid-roles--POST.png"  width="450" height="300">
+</p>
 
-## Contributing
+Unit testing for the roles page which includes reuesting for the list of available roles and creating new roles. 
+<p align="center">
+<img src="Images/api-roles--GET.png"  width="450" height="300"> <img src="Images/api-roles--POST.png"  width="450" height="300">
+</p>
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
+Unit testing for requesting available permission to a certain role and assigning permissions to a new role. 
+<p align="center">
+<img src="Images/api-roles-rolename-permission--GET.png"  width="450" height="300"> <img src="Images/api-roles-rolename-permission--POST.png"  width="450" height="300">
+</p>
 
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
+Unit testing for creating new permissions and requesting for available permissions. 
+<p align="center">
+<img src="Images/api-permissions--GET.png"  width="450" height="300"> <img src="Images/api-permissions--POST.png"  width="450" height="300">
+</p>
