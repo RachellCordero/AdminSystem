@@ -1,0 +1,194 @@
+{% extends 'master.html' %} 
+{% block body %} 
+  <div class="row mt" style="min-height:100vh; !important">
+    <div class="col-md-12">
+      <div class="content-panel">
+        <table class="table table-striped table-advance table-hover" id="tbl_permissions">
+          <h4 style="display:center"><i class="fa fa-angle-right"></i> PERMISSIONS
+            <button type="button" class="btn btn-theme03" onclick="toggle_hidden();" id="btn_delete" style="float:right; margin-right:10px">
+              <i class="fa fa-trash-o"></i> DELETE </button>
+            <button class="btn btn-theme" data-toggle="modal" onclick="getPermissions();"  data-target="#myModal" style="float:right; margin-right:10px">
+              <i class="fa fa-plus"></i>  ADD
+            </button>
+          </h4>
+          <br/>
+          
+          <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header" >
+                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="btn_Close">&times;</button>
+                  <h4 class="modal-title" id="myModalLabel">Add new permission</h4>
+                </div>
+                <div class="modal-body">
+
+                  <div class="form-group">
+                    <div class="col-sm-10">
+                      PERMISSION: <input type="text" class="form-control" id="txbpermission">
+                    </div>
+                  </div>
+                  <br>
+                  <br>
+                  <div class="form-group"> 
+                    <div class="col-sm-10">
+                      DESCRIPTION: <input type="text" class="form-control" id="txbdescription" >
+                    </div>
+                  </div>
+                  <br>
+                </div>
+                  <br>
+                  <div class="modal-footer">
+                    
+                    <button type="button" class="btn btn-primary" onclick="SavePermission()"  data-dismiss="modal"> Save Permission</button>
+                  </div>
+              </div>
+            </div>
+          </div>
+          
+          <thead>
+            <tr>
+              <th><i class="fa fa-key"></i> Permission ID</th>
+              <th class="hidden-phone"><i class="fa fa-user"></i> Name</th>
+              <th><i class="fa fa-book"></i> Description</th>
+              <th><i class="fa fa-key"></i> UID</th>
+              <th class="isHidden"><i class="fa fa-exclamation" ></i> Action</th>
+            </tr>
+          </thead>
+          <tbody>
+          
+            
+          </tbody>
+        </table>
+      </div>
+      <!-- /content-panel -->
+    </div>
+    <!-- /col-md-12 -->
+  </div>
+  
+  <script type="text/javascript">
+    $(document).ready(function() {
+      let xhr = new XMLHttpRequest();
+        let url = "/api/permissions";
+
+        // open a connection
+        xhr.open("GET", url, true);
+
+        // Set the request header i.e. which type of content you are sending
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        // Create a state change callback
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var response = JSON.parse(this.responseText);
+                
+                var table = document.getElementById("tbl_permissions").getElementsByTagName("tbody")[0];
+                for (let x in response) {
+                  console.log(x + "," +response[x]['firstname']+ "," +response[x]['lastname']+ "," +response[x]['role'])
+                  var row = table.insertRow(0);
+                  var id = row.insertCell(0);
+                  var Name = row.insertCell(1);
+                  var Desc = row.insertCell(2);
+                  var uid = row.insertCell(3);
+                  var act = row.insertCell(4);
+
+                  // Add some text to the new cells:
+                  id.innerHTML = x;
+                  Name.innerHTML = response[x]['Pname'];
+                  Desc.innerHTML = response[x]['Pdesc'];
+                  uid.innerHTML = response[x]['UID'];
+
+                  act.classList.add("isHidden");
+                  act.innerHTML = '<button type="button" id="'+response[x]['UID']+'" class="btn btn-theme04 btn-xs"  onclick="delete_row(this)">Delete</button>'
+
+                                  }
+              
+                
+            }
+           
+        };
+        // Sending data with the request
+        xhr.send();
+
+        document.getElementById("a_permission").classList.add("active");
+
+      return false;
+    });
+
+    // Saving New Permission
+    function SavePermission(){
+      if($("#txbpermission").val()=="" || $("#txbpermission").val()==null) {
+        popupMess("Add permission error","Please enter new permission");
+        return
+      }
+      
+      if($("#txbdescription").val()=="" || $("#txbdescription").val()==null) {
+        popupMess("Add description error","Please enter a description");
+        return
+      }
+
+      
+      //uploading part
+      
+       SavePermissiontoDB($("#txbpermission").val(),$("#txbdescription").val());
+    }
+
+    function SavePermissiontoDB(permission,description){
+      let xhr = new XMLHttpRequest();
+        let url = "/api/permissions";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Print received data from server
+                console.log(this.responseText);
+                location.reload();
+            }
+        };
+     
+
+        var data = JSON.stringify({ 
+          "permission": permission,
+          "description":description
+        })
+        xhr.send(data);
+    }
+    function delete_row(btn){
+      $.ajax({
+            type: "POST",
+            url: "/api/permissions/delete",
+            dataType: "text",
+            data: JSON.stringify({ UID: btn.id}),
+            
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                location.reload();
+            },
+            error: function (textStatus, errorThrown) {
+                Success = false;//doesn't go here
+            }
+    
+        });
+    }
+    function toggle_hidden(){
+      if($("#tbl_permissions thead tr th").hasClass("isHidden")){
+        $("#tbl_permissions tbody tr td:nth-child(5)").removeClass("isHidden");
+        $("#tbl_permissions thead tr th:nth-child(5)").removeClass("isHidden");
+        $("#btn_delete").text("Hide delete buttons")
+      }
+      else{
+        $("#tbl_permissions tbody tr td:nth-child(5)").addClass("isHidden");
+        $("#tbl_permissions thead tr th:nth-child(5)").addClass("isHidden");
+        $("#btn_delete").html('<i class="fa fa-trash-o"></i> DELETE')
+      }
+
+    }
+    
+
+  </script>
+  <style>
+    .isHidden{display:none}
+  </style>
+
+{% endblock %} 
+  

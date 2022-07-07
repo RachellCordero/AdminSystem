@@ -1,0 +1,224 @@
+{% extends 'master.html' %} 
+{% block body %} 
+  <div class="row mt" style="min-height:100vh; !important">
+    <div class="col-md-12">
+      <div class="content-panel">
+        <table class="table table-striped table-advance table-hover" id="tbl_accounts">
+          <h4><i class="fa fa-angle-right"></i> USER ACCOUNTS 
+            <button type="button" id=btn_delete class="btn btn-theme03" onclick="toggle_hidden1();"   id="btn_delete" style="float:right; margin-right:10px">
+              <i class="fa fa-trash-o"></i> DELETE </button>
+            <button class="btn btn-theme" id="btn_assign" onclick="toggle_hidden();"  style="float:right; margin-right:10px">
+              <i class="fa fa-plus"></i>  ASSIGN USER
+            </button>
+          </h4>
+          <hr>
+          <thead>
+            <tr>
+              <th><i class="fa fa-pencil"></i> Account ID</th>
+              <th class="hidden-phone"><i class="fa fa-user"></i> First Name</th>
+              <th><i class="fa fa-user"></i> Last Name</th>
+              <th><i class=" fa fa-wrench"></i> Role</th>
+              <th class="isHidden"><i class=" fa fa-wrench"></i> Assign</th>
+              <th class="isHidden"><i class=" fa fa-trash-o"></i> Delete</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            
+            
+          </tbody>
+        </table>
+      </div>
+      <!-- /content-panel -->
+    </div>
+    <!-- /col-md-12 -->
+  </div>
+  <!-- Modal start -->
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header" >
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="btn_Close">&times;</button>
+          <h4 class="modal-title" id="myModalLabel">Assign Role</h4>
+        </div>
+        <div class="modal-body">
+
+          <div class="form-group">
+            <div class="col-sm-10">
+              Account ID: <a id="div_AccountID"></a>
+            </div>
+          </div>
+          <br/>
+          <div id="Modal_Roles">
+
+          </div>
+        </div>
+          <br/>
+          <div class="modal-footer">
+            
+            <button type="button" class="btn btn-theme03" onclick="getUserRole()"  data-dismiss="modal"> Assign Role</button>
+          </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal end -->
+  <script type="text/javascript">
+    $(document).ready(function() {
+      let xhr = new XMLHttpRequest();
+        let url = "/accounts";
+
+        // open a connection
+        xhr.open("GET", url, true);
+
+        // Set the request header i.e. which type of content you are sending
+        xhr.setRequestHeader("Content-Type", "application/json");
+
+        // Create a state change callback
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                // Print received data from server
+                //alert(this.responseText);
+                var response = JSON.parse(this.responseText);
+                
+                var table = document.getElementById("tbl_accounts").getElementsByTagName("tbody")[0];
+                for (let x in response) {
+                  console.log(x + "," +response[x]['firstname']+ "," +response[x]['lastname']+ "," +response[x]['role'])
+                  var row = table.insertRow(0);
+                  var id = row.insertCell(0);
+                  var firstName = row.insertCell(1);
+                  var lastName = row.insertCell(2);
+                  var role = row.insertCell(3);
+                  var action = row.insertCell(4);
+                  var action2 = row.insertCell(5);
+
+                  // Add some text to the new cells:
+                  id.innerHTML = x;
+                  firstName.innerHTML = response[x]['firstname'];
+                  lastName.innerHTML = response[x]['lastname'];
+                  role.innerHTML = response[x]['role'];
+                  action.classList.add("isHidden");
+                  action2.classList.add("isHidden");
+                  action2.innerHTML = '<button id="'+x+'" onclick="Delete_Row(this)" type="button" class="btn btn-theme04 btn-xs">Delete User</button>'
+                  action.innerHTML = '<button id="'+x+'" onclick="getid(this)" type="button" class="btn btn-theme03 btn-xs" data-toggle="modal" data-target="#myModal">Assign Role</button>'
+                  
+                }
+
+
+            }
+        };
+        // Sending data with the request
+        xhr.send();
+        document.getElementById("a_users").classList.add("active");
+
+      return false;
+    });
+    function getid(btn){
+      $("#div_AccountID").text(btn.id);
+
+      $.ajax({
+        type: "GET",
+        url: "/api/roles",
+        dataType: "text",
+        //data: JSON.stringify({ RoleName: btn.id}),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+          var response = JSON.parse(data);
+          var div = document.getElementById("Modal_Roles");
+          var Hold_CB="";
+          for (let x in response) {
+            Hold_CB = Hold_CB + //'<label class="checkbox-inline">'+
+            // '<input type="checkbox" id="'+x+'" value="'+x+'">'+x+
+            // '</label>'
+
+            '<div class="radio"><label>'+
+            '<input type="radio" name="rad_Role" id="'+x+'" value="'+x+'">'+x+
+            '</label></div>'
+          }
+          div.innerHTML=Hold_CB
+        },
+        error: function (textStatus, errorThrown) {
+          popupMess("Ajax","An error occured")
+        }
+  
+      });
+    }
+    function getUserRole(){
+      var user = $("#div_AccountID").text();
+
+      var selected = [];
+      $('#Modal_Roles input:checked').each(function() {
+          selected.push($(this).attr('value'));
+      });
+
+      var role = selected[0]
+
+      $.ajax({
+        type: "post",
+        url: "/api/users/addrole",
+        dataType: "text",
+        data: JSON.stringify({ user:user, role:role}),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+          popupMess("Ajax","Success")
+          location.reload();
+        },
+        error: function (textStatus, errorThrown) {
+          popupMess("Ajax","An error occured")
+        }
+  
+      });
+
+
+    }
+    function toggle_hidden(){
+      if($("#tbl_accounts thead tr th:nth-child(5)").hasClass("isHidden")){
+        $("#tbl_accounts tbody tr td:nth-child(5)").removeClass("isHidden");
+        $("#tbl_accounts thead tr th:nth-child(5)").removeClass("isHidden");
+        $("#btn_assign").text("Hide assign")
+      }
+      else{
+        $("#tbl_accounts tbody tr td:nth-child(5)").addClass("isHidden");
+        $("#tbl_accounts thead tr th:nth-child(5)").addClass("isHidden");
+        $("#btn_assign").html('<i class="fa fa-plus"></i> ASSIGN')
+      }
+
+    }
+    function toggle_hidden1(){
+      if($("#tbl_accounts thead tr th:nth-child(6)").hasClass("isHidden")){
+        $("#tbl_accounts tbody tr td:nth-child(6)").removeClass("isHidden");
+        $("#tbl_accounts thead tr th:nth-child(6)").removeClass("isHidden");
+        $("#btn_delete").text("Hide delete buttons")
+      }
+      else{
+        $("#tbl_accounts tbody tr td:nth-child(6)").addClass("isHidden");
+        $("#tbl_accounts thead tr th:nth-child(6)").addClass("isHidden");
+        $("#btn_delete").html('<i class="fa fa-trash-o"></i> DELETE')
+      }
+
+    }
+    function Delete_Row(btn){
+      var btn_id = btn.id;
+      $.ajax({
+        type: "post",
+        url: "/account/delete",
+        dataType: "text",
+        data: JSON.stringify({ ID:btn_id}),
+        contentType: "application/json; charset=utf-8",
+        success: function (data) {
+          popupMess("Message","Success")
+          location.reload();
+        },
+        error: function (textStatus, errorThrown) {
+          popupMess("Message","An error occured")
+        }
+  
+      });
+    }
+
+  </script>
+  <style>
+    .isHidden{display:none}
+  </style>
+
+{% endblock %} 
+  

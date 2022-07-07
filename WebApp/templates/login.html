@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="Dashboard">
+  <meta name="keyword" content="Dashboard, Bootstrap, Admin, Template, Theme, Responsive, Fluid, Retina">
+  <title>Sign In Page</title>
+
+
+
+  <link href="{{ url_for('static',filename='img/favicon.png') }}" rel="icon">
+  <link href="{{ url_for('static',filename='img/main_icon.png') }}" rel="main-icon">
+
+  <!-- Bootstrap core CSS -->
+  <link href="{{ url_for('static',filename='lib/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+  <!--external css-->
+  <link href="{{ url_for('static',filename='lib/font-awesome/css/font-awesome.css') }}" rel="stylesheet" />
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static',filename='css/style.css') }}" rel="stylesheet">
+  <link href="{{ url_for('static',filename='css/style-responsive.css') }}" rel="stylesheet">
+</head>
+
+<body>
+  <!-- **********************************************************************************************************************************************************
+      MAIN CONTENT
+      *********************************************************************************************************************************************************** -->
+  <div id="login-page">
+    <!--logo start-->
+    <br/>
+    <h1 class="logo" style="text-align:center;color:#219070;font-size:25px;font-family:Trebuchet MS', sans-serif"!important><b> SYSTEM<span> APP</span></b></h1>
+    <!--logo end-->
+    <div class="container">
+      <form class="form-login" action="/api/login" method="post">
+        <h2 class="form-login-heading">sign in now</h2>
+        <div class="login-wrap">
+          <input type="text" class="form-control" placeholder="Username" name="username" value="{{request.form.username }}" autofocus>
+          <br>
+          <input type="password" class="form-control" placeholder="Password" name="password" value="{{request.form.password }}">
+          <label class="checkbox">
+             
+            </label>
+          <button class="btn btn-theme btn-block" type="submit" value="login"><i class="fa fa-lock"></i> SIGN IN</button>
+          <hr>
+          <div class="registration">
+            Don't have an account yet?<br/>
+            <a class="" href="signup.html">
+              Create an account
+              </a>
+          </div>
+          {% if error %}
+            <p class="error"><strong>Error:</strong> {{ error }}
+          {% endif %}
+        </div>
+      </form>
+      
+    </div>
+  </div>
+  <!-- js placed at the end of the document so the pages load faster -->
+  <script src="{{ url_for('static',filename='lib/jquery/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static',filename='lib/bootstrap/js/bootstrap.min.js') }}"></script>
+  <!--BACKSTRETCH-->
+  <!-- You can use an image of whatever size. This script will stretch to fit in any screen size.-->
+  <script type="text/javascript" src="{{ url_for('static',filename='lib/jquery.backstretch.min.js') }}"></script>
+  <script>
+    $.backstretch("{{ url_for('static',filename='img/login2-bg.jpg') }}", {
+      speed: 500
+    });
+    
+    function popupMess(ttl,msg){
+      var unique_id = $.gritter.add({
+        title: ttl,
+        // (string | mandatory) the text inside the notification
+        text: msg,
+        // (string | optional) the image to display on the left
+        // (bool | optional) if you want it to fade out on its own or just sit there
+        sticky: false,
+        // (int | optional) the time you want it to be alive for before fading out
+        time: 8000,
+        // (string | optional) the class name you want to apply to that specific message
+        class_name: 'my-sticky-class'
+      });
+    }
+  </script>
+</body>
+
+</html>
