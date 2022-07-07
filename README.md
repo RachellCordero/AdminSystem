@@ -45,12 +45,13 @@ Flask, request, jsonify, send_from_directory,render_template,redirect, url_for, 
 
 Please follow the following steps to be able to run the system in your machine. 
 
-1. Make a flask director. In your command window type:
-
+1. Open command prompt and make a flask directory. In your command window type:
 ```
-#Make a flask firectory
 mkdir flask-test
-#Go to the directory
+```
+
+2. Go to the directory by typing the following in your command window:
+```
 cd flask-test
 ```
 
