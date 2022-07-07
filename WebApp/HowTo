@@ -1,0 +1,28 @@
+//make flask directory
+mkdir flask-test
+//go to the directory
+cd flask-test  
+
+//install virtual environment
+pip3 install virtualenv
+
+//create virtual environment
+virtualenv .
+
+//RUNNING THE VISRTUAL ENVIRONMENT
+//from the directory go to Scripts and look for activate and run by typing activate to the cmd
+activate
+
+
+//INSTALL FLUSK IN THE VIRTUAL ENVIRONMENT
+Python -m pip install Flask
+
+//RUNNING THE API
+//type flask run in the cmd terminal
+flask run
+
+
+
+//INSTALLING PYODBCS
+//LINK: https://datatofish.com/how-to-connect-python-to-sql-server-using-pyodbc/
+pip install pyodbc
