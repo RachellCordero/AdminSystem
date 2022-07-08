@@ -17,8 +17,8 @@ Modules and libraries required to run the system:
 Flask, request, jsonify, send_from_directory,render_template,redirect, url_for,  pyodbc
 ```
 
-## How To Install
-
+# Running the System
+## Installation of System
 Please follow the following steps to be able to run the system in your machine. 
 
 1. Open command prompt and make a flask directory. In your command window type:
@@ -62,8 +62,18 @@ Installation is successful when this message is shown:
  * Running on http://127.0.0.1:5000 (Press CTRL+C to quit)
  ```
 
-
-## USAGE
+## Creating the Database
+1. Open Microsoft SQL server and create a database named ``` AccountsDB. ```
+2. Open ```System.sql``` located in the downloaded folder, in SSMS/Microsoft SQL and run the query to create the tables of the system. 
+3. Type the following in the query, to retrieve the server name:  ```select @@servername```
+4. Insert the server name in the ``` app.py ``` file to establish the connection.
+```
+conn = pyodbc.connect('Driver={SQL Server};'
+                      'Server=DESKTOP-Q95UTEC\SQLEXPRESS;' <------ insert server name here 
+                      'Database=AccountsDB;'
+                      'Trusted_Connection=yes;')
+```
+# USAGE
 
 1. To open the system, type the http address shown in the last line of the cmd window. Users are first taken to the login page when the application loads. He can log in using his registered username and password. 
 <p align="center">
@@ -90,41 +100,46 @@ Installation is successful when this message is shown:
 </p>
 6. To make the application look cleaner, the add and remove buttons are first hidden. Modal forms are then called to specify the exact roles and permissions that will be created. The delete buttons for each row will appear when the delete button is pushed.
 <p align="center">
-<img src="Images/AddRole.png"  width="450" height="300"> <img src="Images/DeleteRole.png"  width="450" height="300">
+<img src="Images/AddRole.png"  width="550" height="400"> <img src="Images/DeleteRole.png"  width="550" height="400">
 </p>
 7. There are three databases connected to the application, an account table containing the information of the users such as their user names, password, full name and email. A second table is created containing the roles and assigned permission to thes roles. Last table contains the permissions available to be assigned to a user. 
 
 
-## ER Diagram
+# ER Diagram
 <p align="center">
 <img src="Images/ERD.png"  width="750" height="400">
 </p>
 
 
-## Unit testing of API services
-Unit testing for the sign up page: 
+# UNIT TESTING OF API SERVICES
+<b>Unit testing for the sign up page: <b/>
 <p align="center">
-<img src="Images/api-signup.png"  width="450" height="300">
+<img src="Images/api-signup.png"  width="750" height="400">
 </p>
 
-Unit testing for the users page which consists of requesting roles and permissions using the users's unique ID and assigning a role to a user. 
+<b>Unit testing for the users page which consists of requesting roles and permissions using the users's unique ID and assigning a role to a user. </b>
 <p align="center">
-   <img src="Images/api-users-uid-roles--GET.png"  width="450" height="300"> 
-   <img src="Images/api-users-uid-permissions--GET.png"  width="450" height="300"> 
-   <img src="Images/api-users-uid-roles--POST.png"  width="450" height="300">
+   <img src="Images/api-users-uid-roles--GET.png"  width="750" height="400"> 
+   <img src="Images/api-users-uid-permissions--GET.png"  width=750" height="400"> 
+   <img src="Images/api-users-uid-roles--POST.png"  width="750" height="400">
 </p>
 
-Unit testing for the roles page which includes reuesting for the list of available roles and creating new roles. 
+<b>Unit testing for the roles page which includes reuesting for the list of available roles and creating new roles.</b> 
 <p align="center">
-<img src="Images/api-roles--GET.png"  width="450" height="300"> <img src="Images/api-roles--POST.png"  width="450" height="300">
+<img src="Images/api-roles--GET.png"  width="750" height="400"> <img src="Images/api-roles--POST.png"  width="750" height="400">
 </p>
 
-Unit testing for requesting available permission to a certain role and assigning permissions to a new role. 
+<b>Unit testing for requesting available permission to a certain role and assigning permissions to a new role. </b>
 <p align="center">
-<img src="Images/api-roles-rolename-permission--GET.png"  width="450" height="300"> <img src="Images/api-roles-rolename-permission--POST.png"  width="450" height="300">
+<img src="Images/api-roles-rolename-permission--GET.png"  width="750" height="400"> <img src="Images/api-roles-rolename-permission--POST.png"  width="750" height="400">
 </p>
 
-Unit testing for creating new permissions and requesting for available permissions. 
+<b>Unit testing for creating new permissions and requesting for available permissions. </b>
 <p align="center">
-<img src="Images/api-permissions--GET.png"  width="468" height="245"> <img src="Images/api-permissions--POST.png"  width="350" height="200">
+<img src="Images/api-permissions--GET.png"  width="750" height="400"> <img src="Images/api-permissions--POST.png"  width="750" height="400">
 </p>
+                                                                                                                                           
+# Deployment
+1. Make sure to retrieve the server name of database and insert it in the app.py file.
+2. Make sure all necessary libraries are installed before running the system. 
+                                                                                                                                           
