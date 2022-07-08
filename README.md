@@ -64,7 +64,7 @@ Installation is successful when this message is shown:
 
 ## Creating the Database
 1. Open Microsoft SQL server and create a database named ``` AccountsDB. ```
-2. Open ```System.sql``` located in the downloaded folder, in SSMS/Microsoft SQL and run the query to create the tables of the system. 
+2. Open ```System.sql```, located in the downloaded folder, in SSMS/Microsoft SQL and run the query to create the tables of the system. 
 3. Type the following in the query, to retrieve the server name:  ```select @@servername```
 4. Insert the server name in the ``` app.py ``` file to establish the connection.
 ```
