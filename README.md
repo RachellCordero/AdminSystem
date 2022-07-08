@@ -126,5 +126,5 @@ Unit testing for requesting available permission to a certain role and assigning
 
 Unit testing for creating new permissions and requesting for available permissions. 
 <p align="center">
-<img src="Images/api-permissions--GET.png"  width="450" height="300"> <img src="Images/api-permissions--POST.png"  width="450" height="300">
+<img src="Images/api-permissions--GET.png"  width="468" height="245"> <img src="Images/api-permissions--POST.png"  width="350" height="200">
 </p>
